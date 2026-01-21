@@ -27,7 +27,14 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Optional<Product>> getProductById(@PathVariable("id") int jobPostId) {
-        return new ResponseEntity<>(productService.getProductById(jobPostId), HttpStatus.OK);
+    public ResponseEntity<Product> getProductById(@PathVariable("id") int productId) {
+
+        Product product = productService.getProductById(productId);
+        if (product != null) {
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } else {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
