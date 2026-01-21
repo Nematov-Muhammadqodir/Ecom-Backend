@@ -1,6 +1,7 @@
 package com.kevin.SpringEcom.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,10 @@ public class ProductService {
 
     public List<Product> allProducts() {
         return productRepo.findAll();
+    }
+
+    public Optional<Product> getProductById(int productId) {
+        Optional<Product> product = productRepo.findById(productId);
+        return product;
     }
 }
