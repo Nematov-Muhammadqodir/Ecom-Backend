@@ -32,7 +32,7 @@ public class OrderController {
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/orders/")
+    @GetMapping("/orders")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
 
         List<OrderResponse> responses = orderService.getAllOrderResponses();

@@ -5,10 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.kevin.SpringEcom.model.Order;
 import com.kevin.SpringEcom.model.OrderItem;
 import com.kevin.SpringEcom.model.Product;
@@ -19,8 +17,6 @@ import com.kevin.SpringEcom.model.dto.OrderResponse;
 import com.kevin.SpringEcom.repo.OrderRepo;
 import com.kevin.SpringEcom.repo.ProductRepo;
 import com.kevin.SpringEcom.utils.enums.OrderStatus;
-
-import lombok.Builder;
 
 @Service
 public class OrderService {
@@ -34,7 +30,8 @@ public class OrderService {
     public OrderResponse placeOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
-        String orderId = "ORD" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        String orderId = "ORD" + UUID.randomUUID().toString().substring(0,
+                8).toUpperCase();
         order.setOrderId(orderId);
         order.setCustomerName(orderRequest.customerName());
         order.setEmail(orderRequest.email());
@@ -68,14 +65,43 @@ public class OrderService {
             itemResponses.add(orderItemResponse);
         }
 
-        OrderResponse orderResponse = new OrderResponse(savedOrder.getOrderId(), savedOrder.getCustomerName(),
-                savedOrder.getEmail(), savedOrder.getStatus(), savedOrder.getOrderDate(), itemResponses);
+        OrderResponse orderResponse = new OrderResponse(savedOrder.getOrderId(),
+                savedOrder.getCustomerName(),
+                savedOrder.getEmail(), savedOrder.getStatus(), savedOrder.getOrderDate(),
+                itemResponses);
 
         return orderResponse;
     }
 
     public List<OrderResponse> getAllOrderResponses() {
-        return null;
+
+        List<Order> orders = orderRepo.findAll();
+        List<OrderResponse> orderResponses = new ArrayList<>();
+
+        for (Order order : orders) {
+
+            List<OrderItemResponse> itemResponses = new ArrayList<>();
+
+            for (OrderItem item : order.getOrderItems()) {
+                OrderItemResponse itemResponse = new OrderItemResponse(
+                        item.getProduct().getName(),
+                        item.getQuantity(),
+                        item.getTotalPrice());
+                itemResponses.add(itemResponse);
+            }
+
+            OrderResponse response = new OrderResponse(
+                    order.getOrderId(),
+                    order.getCustomerName(),
+                    order.getEmail(),
+                    order.getStatus(),
+                    order.getOrderDate(),
+                    itemResponses);
+
+            orderResponses.add(response);
+        }
+
+        return orderResponses;
     }
 
 }
